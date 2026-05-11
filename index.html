@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HVAC Pro | Fast Local Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .chat-gradient { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans">
+
+    <!-- Navigation -->
+    <nav class="bg-white border-b py-4 px-8 flex justify-between items-center sticky top-0 z-50">
+        <div class="text-2xl font-black text-slate-900 tracking-tighter">[COMPANY NAME]</div>
+        <a href="tel:5555555555" class="bg-orange-500 text-white px-5 py-2 rounded-full font-bold hover:bg-orange-600 transition">Call Now</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="max-w-6xl mx-auto py-20 px-6 grid md:grid-cols-2 gap-12 items-center">
+        <div>
+            <span class="text-orange-500 font-bold uppercase tracking-widest text-sm">Available 24/7 in [City Name]</span>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mt-4 leading-tight">AC Broken? <br><span class="text-orange-500">We’ll fix it today.</span></h1>
+            <p class="text-lg text-slate-600 mt-6 mb-10">Don't wait for a call back. Use our automated assistant to book your diagnostic appointment in under 60 seconds.</p>
+            <button onclick="toggleChat()" class="bg-slate-900 text-white text-lg font-bold py-4 px-10 rounded-xl hover:scale-105 transition-transform shadow-2xl">
+                Start Booking Now
+            </button>
+        </div>
+        <div class="hidden md:block bg-slate-200 h-96 rounded-3xl shadow-inner flex items-center justify-center text-slate-400 italic">
+            [Add Photo of HVAC Unit Here]
+        </div>
+    </header>
+
+    <!-- Chat Widget -->
+    <div id="chat-container" class="fixed bottom-6 right-6 w-96 max-w-[90vw] hidden z-[100]">
+        <div class="bg-white rounded-2xl shadow-2xl border overflow-hidden flex flex-col h-[500px]">
+            <div class="chat-gradient p-4 text-white flex justify-between items-center">
+                <div>
+                    <p class="font-bold">Service Assistant</p>
+                    <p class="text-xs text-slate-400">Online | Typical reply: Instantly</p>
+                </div>
+                <button onclick="toggleChat()" class="text-2xl">&times;</button>
+            </div>
+            <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-50">
+                <div class="bg-white border p-3 rounded-lg rounded-tl-none shadow-sm text-sm inline-block max-w-[80%]">
+                    Hi! I'm the [Company] assistant. Is this an emergency repair or a routine tune-up?
+                </div>
+            </div>
+            <div class="p-4 border-t bg-white">
+                <div class="flex gap-2">
+                    <input id="user-msg" type="text" placeholder="Type your reply..." class="flex-1 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <button onclick="sendMessage()" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-bold">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const chat = document.getElementById('chat-container');
+            chat.classList.toggle('hidden');
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('user-msg');
+            const box = document.getElementById('chat-box');
+            if(!input.value) return;
+
+            // Display User Message
+            box.innerHTML += `<div class="text-right"><div class="bg-slate-900 text-white p-3 rounded-lg rounded-tr-none shadow-sm text-sm inline-block max-w-[80%]">${input.value}</div></div>`;
+            
+            const userMsg = input.value;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            // Placeholder for API Call to your Python Backend
+            // const response = await fetch('YOUR_RENDER_URL/chat', { method: 'POST', ... });
+        }
+    </script>
+</body>
+</html>
