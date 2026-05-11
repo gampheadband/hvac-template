@@ -6,32 +6,40 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Pull the key from Render Environment Variables
-key = os.environ.get("GEMINI_API_KEY")
+# Force the SDK to use the stable v1 API
+os.environ["GOOGLE_API_USE_MTLS_ENDPOINT"] = "never"
+
+api_key = os.environ.get("GEMINI_API_KEY")
 
 @app.route('/chat', methods=['POST'])
 def chat():
     try:
-        # Check if key exists
-        if not key:
-            return jsonify({"reply": "System Error: API Key is missing in Render settings."}), 500
+        if not api_key:
+            return jsonify({"reply": "Backend Error: Missing API Key in Render."}), 500
             
-        genai.configure(api_key=key)
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        genai.configure(api_key=api_key)
+        
+        # CHANGED: Using the new 2026 stable workhorse model
+        model = genai.GenerativeModel('gemini-3.1-flash-lite')
         
         data = request.json
-        user_message = data.get("message", "")
+        user_msg = data.get("message", "")
         
-        # Dispatcher instructions
-        prompt = f"You are a professional HVAC dispatcher. Assist the customer briefly. User says: {user_message}"
+        # Refined dispatcher prompt for better local business leads
+        prompt = (
+            "You are a professional HVAC dispatcher for a local repair company. "
+            "Be brief and helpful. Your goal is to get the customer's name, "
+            "phone number, and a brief description of their AC/Heating issue. "
+            f"Customer says: {user_msg}"
+        )
         
         response = model.generate_content(prompt)
         return jsonify({"reply": response.text})
         
     except Exception as e:
-        # This will print the EXACT error to your Render Logs tab
-        print(f"BACKEND ERROR: {str(e)}")
-        return jsonify({"reply": "The AI is having a momentary glitch. Please try again."}), 500
+        print(f"ERROR: {str(e)}")
+        # If the model still 404s, it's likely a region or library version issue
+        return jsonify({"reply": "The AI is resetting. Try sending one more message!"}), 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=10000)
