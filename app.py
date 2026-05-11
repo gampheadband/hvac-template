@@ -5,7 +5,7 @@ import google.generativeai as genai
 app = Flask(__name__)
 CORS(app) # Allows your website to talk to this script
 
-genai.configure(api_key="YOUR_FREE_GEMINI_KEY")
+genai.configure(api_key="GEMINI_API_KEY")
 model = genai.GenerativeModel('gemini-pro')
 
 @app.route('/chat', methods=['POST'])
