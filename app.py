@@ -17,7 +17,7 @@ def chat():
             return jsonify({"reply": "System Error: API Key is missing in Render settings."}), 500
             
         genai.configure(api_key=key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash-latest')
         
         data = request.json
         user_message = data.get("message", "")
